@@ -1,74 +1,15 @@
 <html>
-
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	<link rel="stylesheet" href="css/style.css" />
 	<script type="text/javascript" src="copperlichtdata/copperlicht.js"></script>
-	<style>
-		html, body {
-			margin: 0;
-			padding: 0;
-			background-color: #000000;
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-		}		
-	</style>
+	<script type="module" src="js/main.js" defer></script>
 </head>
 
 <body>
 	<div style="align-items:center" id="container">
 		<canvas id="3darea"></canvas>
 	</div>
-
-	<script type="text/javascript">
-		function resizeCanvas() {
-			var canvas = document.getElementById('3darea');
-			var windowWidth = window.innerWidth;
-			var windowHeight = window.innerHeight;
-
-			// Calcula ancho basado en alto 16:9
-			var canvasWidth = windowHeight * (16 / 9);
-
-			if (canvasWidth > windowWidth) {
-				// Si ancho calculado es mayor que ventana, usa ancho máximo y ajusta alto
-				canvasWidth = windowWidth;
-				canvas.height = canvasWidth * (9 / 16);
-				canvas.width = canvasWidth;
-			} else {
-				canvas.width = canvasWidth;
-				canvas.height = windowHeight;
-			}
-		}
-
-		window.addEventListener('resize', resizeCanvas);
-		window.addEventListener('load', resizeCanvas);
-
-
-		//startCopperLichtFromFile('3darea', 'copperlichtdata/shadows.ccbjs', 'Loading $PROGRESS$...<br/><br/><img style="max-width:50%" src="copperlichtdata/coppercubeloadinglogo.png" />', 'Error: This browser does not support WebGL (or it is disabled).<br/>See <a href=\"http://www.ambiera.com/copperlicht/browsersupport.html\">here</a> for details.', false, false, "#000000");
-
-		// create the 3d engine		
-		 var engine = new CL3D.CopperLicht('3darea');
-		var scene = null;
-
-		if (engine.initRenderer()) {
-			var setupShadowScene = function () {
-				scene = engine.getScene();				
-
-				 scene.ShadowMappingEnabled = true;
-				 scene.ShadowMapOpacity = 0.5;
-				 scene.ShadowMapResolution = 2048;
-				 scene.ShadowMapBias = 0.0001;
-				 scene.ShadowMapCameraViewDetailFactor = 0.1;
-
-
-				 //scene.setFog(true, CL3D.createColor(1, 23, 23, 23), 0.01);
-
-			}
-		}
-		engine.load('copperlichtdata/shadows.ccbjs', false, setupShadowScene); 
-
-
-	</script>
 </body>
 
 </html>

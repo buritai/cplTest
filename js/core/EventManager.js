@@ -1,8 +1,9 @@
 
-export class Game {
+
+export class EventManager {
 
     static create() {
-        return new Game();
+        return new EventManager();
     }
 
     constructor() {}

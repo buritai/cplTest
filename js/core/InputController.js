@@ -43,8 +43,22 @@ export class InputController {
         return header;
     }
 
+    logHeader(text) {
+        let header = [
+            "%c %c %c" + text, 
+            "background: #159740ff; font-size: 14px",
+            "background: #02290bff; font-size: 14px",
+            "color: #4b6b24ff; background: #000000; font-size: 14px",
+        ];
+        return header;
+    }
+
     print(text) {        
         console.log.apply(console, this.basicHeader(text));
+    }
+
+    log(text) {        
+        console.log.apply(console, this.logHeader(text));
     }
 
 }

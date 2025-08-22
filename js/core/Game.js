@@ -1,19 +1,19 @@
 
+import { Emitter } from "./Emitter.js";
 export class Game {
 
     static create() {
         return new Game();
     }
 
-    constructor() {
-
-        this._currentMap = null;
+    constructor() {        
         this._mainMenu = null;
         this._playing = false;
+        Emitter.call(this);
     }
 
-    init(){
-
+    init() {        
+        //this.addEventListener("#onMapLoaded",)
     }
 
     /**
@@ -21,7 +21,8 @@ export class Game {
      */
     start() {
         IOController.log("Starting ........");
-        //this._currentMap = MManager.getMapForId("Intro");
+        CMap = MapMngr.loadMapForId("Intro");
+        CScene = CMap.scene;
 
 
     }

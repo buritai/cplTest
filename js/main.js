@@ -1,5 +1,7 @@
 import { resizeCanvas } from "./utils.js";
+import { Emitter } from "./core/Emitter.js"
 import { Game } from "./core/Game.js";
+import { LevelMap } from "./core/LevelMap.js";
 import { InputController } from "./core/InputController.js";
 import { MapManager } from "./core/MapManager.js";
 import { SoundManager } from "./core/SoundManager.js";
@@ -8,36 +10,65 @@ import { defaults } from "./defaults.js";
 window.addEventListener('resize', resizeCanvas);
 window.addEventListener('load', resizeCanvas);
 
-
-
-//startCopperLichtFromFile('3darea', 'copperlichtdata/shadows.ccbjs', 'Loading $PROGRESS$...<br/><br/><img style="max-width:50%" src="copperlichtdata/coppercubeloadinglogo.png" />', 'Error: This browser does not support WebGL (or it is disabled).<br/>See <a href=\"http://www.ambiera.com/copperlicht/browsersupport.html\">here</a> for details.', false, false, "#000000");
-
-// Global. create the 3d engine	global variable	
+/**
+ * Copperlitch engine.
+ * Engine global var.
+ * 
+ * @access global  
+ * @type {CL3D.CopperLicht} */
 window.Engine = null;
 
-// Global. Current Scene global variable
+
+/**
+ * Escena actual.
+ * CScene global var.
+ * 
+ * @access global  
+ * @type {CL3D.Scene} */
 window.CScene = null;
 
 /**
- * MManager
- * @acces global
- */
-window.MManager      = null; 
+ * Mapa actual.
+ * Cmap global var.
+ * 
+ * @access global  
+ * @type {LevelMap} */
+window.CMap = null;
+
 
 /**
+ * MapMngr encargado de manejar la administracion de mapas/scenes.
+ * MapMngr global var.
+ * 
  * @acces global
- */
-window.IOController    = null;
+ * @type {MapManager} */
+window.MapMngr = null; 
 
 /**
+ * IOCOntroller entrada salida no-grafica.
+ * IOCOntroller global var.
+ * 
  * @acces global
- */
-window.SndManager      = null; 
+ * @type {InputController} */
+window.IOController = null;
 
 /**
+ * SndMngr manejo de sonido.
+ * SndMngr global var.
+ * 
  * @acces global
- */
-window.CGame           = null;
+ * @type {SoundManager} */
+window.SndMngr = null; 
+
+/**
+ * CGame representa el juego que orquesta la animacion.
+ * CGame global var.
+ * 
+ * @acces global
+ * @type {SoundManager} */
+window.CGame = null;
+
+
 
 /**
  * @acces global
@@ -47,19 +78,27 @@ window.GLOBAL = defaults;
 class System {
 
     static defaults = GLOBAL;
+
+    static create() {
+        return new System();
+    }
+
+    constructor() {
+        Emitter.call(this);
+    }
     
-    static init() {
+    init() {
         IOController = InputController.create();
         IOController.print(">> System init.");        
         IOController.init();
         IOController.print(">> IOController init.");
 
-        MManager = MapManager.create();
-        MManager.init();
+        MapMngr = MapManager.create();
+        MapMngr.init();
         IOController.print(">> MapManager init."); 
 
-        SndManager = SoundManager.create(); 
-        SndManager.init();
+        SndMngr = SoundManager.create(); 
+        SndMngr.init();
         IOController.print(">> SoundManager init.");
 
         IOController.print(">> CopperLicht init.");
@@ -88,6 +127,6 @@ class System {
 }
 
 
-
-System.init();
+var system = System.create();
+system.init();
 

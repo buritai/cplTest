@@ -1,8 +1,8 @@
 
-export class Map {
+export class LevelMap {
 
     static create() {
-        return new Map();
+        return new LevelMap();
     }
 
     constructor() {}

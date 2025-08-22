@@ -1,13 +1,18 @@
 
 
-export class InputController {
+export class IOController {
     
     static create() {
-        return new InputController();
+        return new IOController();
     }
 
     constructor() {
         this.bannerConsole();
+
+        /** aliases */
+        this.log = console.log.bind(console);
+        this.warn = console.warn.bind(console);
+        this.error = console.error.bind(console);
     }
 
     init() {
@@ -57,7 +62,7 @@ export class InputController {
         console.log.apply(console, this.basicHeader(text));
     }
 
-    log(text) {        
+    show(text) {        
         console.log.apply(console, this.logHeader(text));
     }
 

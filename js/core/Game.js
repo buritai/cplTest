@@ -1,5 +1,8 @@
 
+import { Sys } from "./Sys.js";
 import { Emitter } from "./Emitter.js";
+
+
 export class Game {
 
     static create() {
@@ -9,6 +12,8 @@ export class Game {
     constructor() {        
         this._mainMenu = null;
         this._playing = false;
+
+        this.init();
         Emitter.call(this);
     }
 
@@ -20,9 +25,10 @@ export class Game {
      * Arranca el juego
      */
     start() {
-        IOController.log("Starting ........");
-        CMap = MapMngr.loadMapForId("Intro");
-        CScene = CMap.scene;
+        IO.show("Starting ........");
+        MapMngr.loadMapForId("Intro");
+        //CMap = MapMngr.loadMapForId("intro");
+        //CScene = CMap.scene;
 
 
     }

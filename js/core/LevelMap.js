@@ -5,7 +5,41 @@ export class LevelMap {
         return new LevelMap();
     }
 
-    constructor() {}
+
+    /**
+     * Crea una instancia con la escena
+     * 
+     * @param {CL3D.Scene} scene
+     * @returns {LevelMap} lvl
+     */
+    static createWith(scene) {
+        let lvl = new LevelMap();
+        lvl.scene = scene;
+        return lvl;
+    }
+
+    constructor() {
+        this._scene = null;
+    }
+
+    /**
+     * Obtiene la escena del receptor.
+     * @access public
+     * @returns {CL3D.Scene}
+     */
+    get scene() {
+        return this._scene;
+    }
+
+    /**
+     * Setea la escena del receptor.
+     * @access public
+     * @param {CL3D.Scene} scene  {CL3D.Scene}
+     */
+    set scene(scene) {
+        this._scene = scene;
+    }
+
 
     init(){}
 }

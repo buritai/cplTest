@@ -71,19 +71,6 @@ export class Sys {
         CGame.init();
         IO.print(">> Game init.");
 
-        CGame.start();
-        
-        if (Engine.initRenderer()) {
-            var setupShadowScene = function () {
-                CScene = Engine.getScene();
-                    CScene.ShadowMappingEnabled = true;
-                    CScene.ShadowMapOpacity = 0.5;
-                    CScene.ShadowMapResolution = 2048;
-                    CScene.ShadowMapBias = 0.0001;
-                    CScene.ShadowMapCameraViewDetailFactor = 0.1;
-                    //scene.setFog(true, CL3D.createColor(1, 23, 23, 23), 0.01);
-                }
-        }
-        Engine.load('copperlichtdata/shadows.ccbjs', false, setupShadowScene); 
+        CGame.doBegin();
     }
 }

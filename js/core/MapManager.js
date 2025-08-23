@@ -1,5 +1,5 @@
 import { Sys } from "./Sys.js";
-import { Emmitter } from "./Emmitter.js";
+import { Emitter } from "./Emitter.js";
 import { LevelMap } from "./LevelMap.js";
 
 export class MapManager {
@@ -14,11 +14,7 @@ export class MapManager {
         this.init();
     }    
     
-    init() {
-        this.addEventListener("#sceneLoaded", ))
-        dispatchEvent(new CustomEvent("#updateSharingUrl", changeData));
-
-    }
+    init() {}
 
     /**
      * Carga el mapa con el mapId requerido
@@ -26,26 +22,41 @@ export class MapManager {
      * @return void
      */
     loadMapForId(mapId) {
+        let self = this;
         let lvlDescriptor = this.levelDescriptorFor(mapId);
         if(!lvlDescriptor) throw Error("Imposible cargar mapa:" + mapId);
         Engine.load(GLOBAL.ENGINE_DATA_PATH + "/" + lvlDescriptor.file, true, 
-                (lvlDescriptor) => { this.setupScene(lvlDescriptor)} );
+                () => { self.setupScene(lvlDescriptor)} );
     }
 
     /**
      * Setup de la escena recientemente cargada
-     * @param {*} params 
+     * @access private
+     * @param {object} lvlDescriptor 
      */
-    setupScene(params) {
-        IO.log(params);              
+    setupScene(lvlDescriptor) {
+        let self = this;
+        IO.log(lvlDescriptor);              
         CScene = Sys.engine.getScene();
         CMap = LevelMap.createWith(CScene);
-        let data = {
-            map: CMap
-        };
-        this.dispatchEvent(new CustomEvent("#sceneLoaded", data));
+        self.setupSceneWith(CSene, lvlDescriptor.sceneProperties);
+        this.dispatchEvent(new CustomEvent("#sceneLoaded", {scene: CScene}));
+        this.dispatchEvent(new CustomEvent("#mapLoaded", { map: CMap }));
     }
 
+    /**
+     * Setea propiedades por defualt de la escena
+     * @param {CL3D,Scene} scene 
+     * @param {object} properties 
+     */
+    setupSceneWith(scene, properties) {
+        scene.ShadowMappingEnabled = true;
+        scene.ShadowMapOpacity = 0.5;
+        scene.ShadowMapResolution = 2048;
+        scene.ShadowMapBias = 0.0001;
+        scene.ShadowMapCameraViewDetailFactor = 0.1;
+        
+    }
     /**
      * Obtiene el level descriptor
      * 

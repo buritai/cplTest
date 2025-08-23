@@ -5,10 +5,8 @@ export class LevelMap {
         return new LevelMap();
     }
 
-
     /**
      * Crea una instancia con la escena
-     * 
      * @param {CL3D.Scene} scene
      * @returns {LevelMap} lvl
      */
@@ -20,6 +18,7 @@ export class LevelMap {
 
     constructor() {
         this._scene = null;
+        this.init();
     }
 
     /**
@@ -40,7 +39,7 @@ export class LevelMap {
         this._scene = scene;
     }
 
-
     init(){}
+    
 }
 

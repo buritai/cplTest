@@ -10,26 +10,29 @@ export class Game {
     }
 
     constructor() {        
-        this._mainMenu = null;
+        this._menuActive = null;
         this._playing = false;
-
-        this.init();
         Emitter.call(this);
+        this.init();        
     }
 
-    init() {        
-        //this.addEventListener("#onMapLoaded",)
+    init() {
+        let self = this;        
+        self.addEventListener("#onMapLoaded", (event) => {
+            self.startAnimate();
+        });
     }
 
     /**
      * Arranca el juego
      */
-    start() {
+    doBegin() {
         IO.show("Starting ........");
         MapMngr.loadMapForId("Intro");
-        //CMap = MapMngr.loadMapForId("intro");
-        //CScene = CMap.scene;
+    }
 
+    startAnimate() {
+        if(!Engine.initRenderer()) throw Error("Imposible arrancar engine");
 
     }
 }

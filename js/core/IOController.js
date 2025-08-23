@@ -6,17 +6,16 @@ export class IOController {
         return new IOController();
     }
 
-    constructor() {
-        this.bannerConsole();
+    constructor() {        
+        this.init();        
+    }
 
+    init() {
+        this.bannerConsole();
         /** aliases */
         this.log = console.log.bind(console);
         this.warn = console.warn.bind(console);
         this.error = console.error.bind(console);
-    }
-
-    init() {
-
     }
 
     /**

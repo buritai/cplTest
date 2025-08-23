@@ -1,7 +1,6 @@
 
 export let defaults = {
     ENGINE_DATA_PATH: "/copperlichtdata",
-
     /** Descriptores de niveles */
     LEVELS: [
         {

@@ -25,7 +25,7 @@ export class MapManager {
         let self = this;
         let lvlDescriptor = this.levelDescriptorFor(mapId);
         if(!lvlDescriptor) throw Error("Imposible cargar mapa:" + mapId);
-        Engine.load(GLOBAL.ENGINE_DATA_PATH + "/" + lvlDescriptor.file, true, 
+        Engine.load('copperlichtdata/' + lvlDescriptor.file, true, 
                 () => { self.setupScene(lvlDescriptor)} );
     }
 

@@ -1,17 +1,18 @@
+import { JSObject } from "./JSObject.js";
 
-
-export class IOController {
+export class IOController extends JSObject {
     
     static create() {
         return new IOController();
     }
 
-    constructor() {        
-        this.init();        
+    constructor() { 
+        super();
+        this.bannerConsole();        
     }
 
     init() {
-        this.bannerConsole();
+        
         /** aliases */
         this.log = console.log.bind(console);
         this.warn = console.warn.bind(console);

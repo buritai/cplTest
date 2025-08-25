@@ -1,39 +1,43 @@
 
+import { JSObject } from "./JSObject.js";
 import { Sys } from "./Sys.js";
-import { Emitter } from "./Emitter.js";
 
 
-export class Game {
+class Game extends JSObject {
 
     static create() {
         return new Game();
     }
 
-    constructor() {        
+    constructor() {  
+        super();      
         this._menuActive = null;
-        this._playing = false;
-        Emitter.call(this);
+        this._playing = false;        
         this.init();        
     }
 
     init() {
         let self = this;        
-        self.addEventListener("#onMapLoaded", (event) => {
-            self.startAnimate();
-        });
+        
     }
 
     /**
      * Arranca el juego
      */
     doBegin() {
+        let self = this;
         IO.show("Starting ........");
+        IO.show("mapLoaded ........");
+        MapMngr.addEventListener("#mapLoaded", (event) => {            
+            self.initRender();
+        });
         MapMngr.loadMapForId("Intro");
     }
 
-    startAnimate() {
-        if(!Engine.initRenderer()) throw Error("Imposible arrancar engine");
+    initRender() {
+        IO.log(">>initRender");
+        //if(!Engine.initRenderer()) throw Error("Imposible arrancar engine");
 
     }
 }
-
+export { Game }

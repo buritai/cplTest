@@ -1,20 +1,22 @@
 import { Sys } from "./Sys.js";
-import { Emitter } from "./Emitter.js";
+import { JSObject } from "./JSObject.js";
 import { LevelMap } from "./LevelMap.js";
 
-export class MapManager {
+export class MapManager extends JSObject {
 
     static create() {
         return new MapManager();
     }
 
     constructor() {
+        super();
         this._maps = [];
-        Emitter.call(this);
         this.init();
-    }    
+    }
     
     init() {}
+    
+    
 
     /**
      * Carga el mapa con el mapId requerido
@@ -25,8 +27,11 @@ export class MapManager {
         let self = this;
         let lvlDescriptor = this.levelDescriptorFor(mapId);
         if(!lvlDescriptor) throw Error("Imposible cargar mapa:" + mapId);
-        Engine.load('copperlichtdata/' + lvlDescriptor.file, true, 
-                () => { self.setupScene(lvlDescriptor)} );
+        Engine.OnLoadingComplete = function() {
+            self.setupScene(Engine.getScene(), lvlDescriptor);
+        };
+        Engine.load('copperlichtdata/' + lvlDescriptor.file, true);
+        
     }
 
     /**
@@ -34,19 +39,26 @@ export class MapManager {
      * @access private
      * @param {object} lvlDescriptor 
      */
-    setupScene(lvlDescriptor) {
-        let self = this;
-        IO.log(lvlDescriptor);              
-        CScene = Sys.engine.getScene();
+    setupScene(scene, lvlDescriptor) {
+        let self = this;        
+        CScene = scene;
         CMap = LevelMap.createWith(CScene);
-        self.setupSceneWith(CSene, lvlDescriptor.sceneProperties);
-        this.dispatchEvent(new CustomEvent("#sceneLoaded", {scene: CScene}));
-        this.dispatchEvent(new CustomEvent("#mapLoaded", { map: CMap }));
+        // self.setupSceneWith(CSene, lvlDescriptor.sceneProperties);        
+        "#sceneLoaded"
+            .asEventWith({scene: CScene})
+            .dispatchFor(self);
+        "#mapLoaded"
+            .asEventWith({ map: CMap })
+            .dispatchFor(self);
+        //this.dispatchEvent(new CustomEvent("#sceneLoaded", {scene: "CScene"}));
+        //this.dispatchEvent(new CustomEvent("#mapLoaded", {scene: "CMap"}));
+        //this.dispatchEvent( "#sceneLoaded".asEventWith({scene: CScene}) );
+        //this.dispatchEvent( "#mapLoaded".asEventWith( { map: CMap }) );
     }
 
     /**
      * Setea propiedades por defualt de la escena
-     * @param {CL3D,Scene} scene 
+     * @param {CL3D.Scene} scene 
      * @param {object} properties 
      */
     setupSceneWith(scene, properties) {

@@ -1,53 +1,48 @@
 
-import { Emitter } from "./Emitter.js"
+import { JSObject } from "./JSObject.js"
 import { Game } from "./Game.js";
 import { LevelMap } from "./LevelMap.js";
 import { IOController } from "./IOController.js";
 import { MapManager } from "./MapManager.js";
 import { SoundManager } from "./SoundManager.js";
-import { defaults } from "../defaults.js";
+//import { defaults } from "../defaults.js";
 
-export class Sys {
+class Sys extends JSObject {
 
     static defaults = GLOBAL;
     
     /** @type {CL3D.CopperLicht} */
-    static engine = Engine;
+    static engine = null;
 
     /** Escena actual  
      * @type {CL3D.Scene} */
-    static cScene = CScene;    
+    static cScene = null;    
 
     /**
      * Mapa actual.
      * @type {LevelMap} */
-    static cMap = CMap;    
+    static cMap = null;    
     
     /**
      * Map manager 
      * @type {MapManager} */
-    static mapMngr = MapMngr; 
+    static mapMngr = null; 
     
     
     /**
      * Sound manager, manejo de sonido.
      * @type {SoundManager} */
-     static sndMngr = SndMngr;
+     static sndMngr = null;
     
     /**
      * CGame juego actual
      * @type {Game} */
-    static cGame = CGame;
+    static cGame = null;
     
 
     static create() {
         return new Sys();
-    }
-
-    constructor() {
-        Emitter.call(this);
-        
-    }
+    }   
     
     init() {
         IO = IOController.create();
@@ -74,3 +69,4 @@ export class Sys {
         CGame.doBegin();
     }
 }
+export {Sys}

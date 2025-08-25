@@ -1,12 +1,15 @@
+import { JSObject } from "./JSObject.js";
 
-
-export class SoundManager {
+class SoundManager extends JSObject{
 
     static create() {
         return new SoundManager();
     }
 
-    constructor() {}
+    constructor() {
+        super();
+    }
 
     init() {}
 }
+export { SoundManager }

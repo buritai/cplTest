@@ -5,7 +5,7 @@ export let defaults = {
     LEVELS: [
         {
             id: "Intro",
-            file: "shadows.ccbjs",
+            file: "scene2.ccbjs",
             sceneProperties: {
                 ShadowMappingEnabled: true,
                 ShadowMapOpacity: 0.5,

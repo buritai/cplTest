@@ -1,5 +1,5 @@
-
-export class LevelMap {
+import { JSObject } from "./JSObject.js";
+export class LevelMap extends JSObject{
 
     static create() {
         return new LevelMap();
@@ -17,6 +17,7 @@ export class LevelMap {
     }
 
     constructor() {
+        super();
         this._scene = null;
         this.init();
     }

@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+*.html
+!index.html
+*.exe
+
 # Editor directories and files
 .vscode/*
 .idea/

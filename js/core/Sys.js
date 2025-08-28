@@ -39,7 +39,7 @@ class Sys extends JSObject {
      * @type {Game} */
     static cGame = null;
     
-
+    
     static create() {
         return new Sys();
     }   

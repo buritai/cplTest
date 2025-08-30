@@ -3,7 +3,7 @@
  * Retorna un objeto CL3D.Vec3d
  * @returns {CL3D.Vec3d}
  */
-Array.prototype.asVec3d = function() {
+Array.prototype.asVect3d = function() {
     if (this.length < 3) {
       throw new Error('El array debe tener al menos 3 elementos para convertirlo en un CL3D.Vec3d');
     }   
@@ -20,7 +20,7 @@ Array.prototype.asVec3d = function() {
  * Retorna un objeto CL3D.Vec3d
  * @returns {CL3D.Vec3d}
  */
-Array.prototype.asVec2d = function() {
+Array.prototype.asVect2d = function() {
     if (this.length < 2) {
       throw new Error('El array debe tener al menos 3 elementos para convertirlo en un CL3D.Vec3d');
     }    

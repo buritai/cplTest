@@ -4,6 +4,7 @@ import { Sys } from "./Sys.js";
 import { CL3DWalkCircleAnimator } from "../CL3D/CL3DWalkCircleAnimator.js";
 
 
+
 class Game extends JSObject {
 
     static create() {
@@ -28,16 +29,17 @@ class Game extends JSObject {
     doBegin() {
         let self = this;
         IO.show("Starting ........");
-        IO.show("mapLoaded ........");
+        IO.show("mapLoaded ........");        
         MapMngr.addEventListener("#mapLoaded", (event) => {            
-            self.initRender();
+            self.initEngine();
             self.test();
         });
         MapMngr.loadMapForId("Intro");
     }
 
-    initRender() {
-        IO.log(">>initRender");
+    initEngine() {
+        IO.log(">>initEngine");        
+       
 
         //if(!Engine.initRenderer()) throw Error("Imposible arrancar engine");
 
@@ -45,15 +47,16 @@ class Game extends JSObject {
 
     test() {
         let lightNode = CScene.getSceneNodeFromName("Light1");
-        
+        let sound = CScene.getSceneNodeFromName("3DSound1");
+        console.log(CL3D.gSoundManager);
         if(lightNode) {
             let radius = 100;
             let speed = 0.001;
             //let center = new CL3D.Vect3d(-17.888088, 48.038662, -2602.973877);
             //let center = new CL3D.Vect3d(-17.888088, 55.0, -2602.973877);
-            let center = [-17.888088, 55.0, -2602.973877].asVec3d();
+            let center = [-17.888088, 55.0, -2602.973877].asVect3d();
             //let direction = new CL3D.Vect3d(0, 1, 0);
-            let direction = [0, 1, 0].asVec3d();        
+            let direction = [0, 1, 0].asVect3d();        
             lightNode.addAnimator(new CL3DWalkCircleAnimator(center, radius, direction, speed));
         }
     }

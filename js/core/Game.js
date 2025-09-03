@@ -19,12 +19,48 @@ class Game extends JSObject {
     }
 
     init() {
-        let self = this;        
+        let self = this;
+        // Hooks varios desde copperlitch
+        Engine.onAnimate = function() {
+            self.doAnimate();
+
+        }
+
+        Engine.OnBeforeDrawAll = function() {
+            self.doBeforeDrawAll();
+        }
+        
+    }
+
+    /**
+     * Activacion del receptor en cada frame de la animacion
+     * @private
+     */
+    doAnimate() {
+
+        // Acciones de NPC
+        
+        // Proyectiles
+
+        // Sonidos
+
+        // HUD (Head-Up Display)
+
+        
+    }
+
+    /**
+     * Activacion del receptor en cada frame 
+     * antes de renderizar la escena
+     * @private
+     */
+    doBeforeDrawAll() {
         
     }
 
     /**
      * Arranca el juego
+     * @private
      */
     doBegin() {
         let self = this;

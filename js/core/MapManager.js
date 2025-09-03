@@ -1,4 +1,3 @@
-import { Sys } from "./Sys.js";
 import { JSObject } from "./JSObject.js";
 import { LevelMap } from "./LevelMap.js";
 
@@ -37,6 +36,7 @@ export class MapManager extends JSObject {
     /**
      * Setup de la escena recientemente cargada
      * @access private
+     * @param {CL3D.Scene} scene
      * @param {object} lvlDescriptor 
      */
     setupScene(scene, lvlDescriptor) {

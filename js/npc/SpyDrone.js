@@ -1,5 +1,6 @@
 import { MovingObject } from "../objects/MovingObject.js";
 import { DetectionPulse } from "../objects/DetectionPulse.js";
+import { Environment } from "../objects/Environment.js";
 
 const OperationalMode = {
     PATROL: 'PATROL',
@@ -8,23 +9,19 @@ const OperationalMode = {
 
 class SpyDrone extends MovingObject {
 
+
     static create() {
         let obj = new SpyDrone();
         obj.init();
         return obj;
     }
 
+
+
     constructor() {
         super();
-        
-        // CL3D.SceneNode
-        /** @type {CL3D.SceneNode} */
-        this.node = null;
 
-        /** @type {Enviroment} */
-        this.env = null;
-
-        this.mode = OperationalMode.ATTACK        
+        this._mode = OperationalMode.ATTACK
 
         // Conjunto de potenciales objetivos
         // detectados en el ultimo pulso de detecccion
@@ -57,14 +54,26 @@ class SpyDrone extends MovingObject {
         return 10;
     }
 
+    /**
+     * Radio del pulso
+     * @returns {number}
+     */
     defaultRadiusPulse() {
         return 10;
     }
 
+    /**
+     * Propagación default del pulso
+     * @returns {number}
+     */
     defaultForcePropagation() {
         return 50;
     }
 
+    /**
+     * Fuerza propagación del pulso
+     * @returns {number}
+     */
     get forcePropagation() {
         return this.defaultForcePropagation();
     }
@@ -76,6 +85,7 @@ class SpyDrone extends MovingObject {
      */
     exec() {
         let self = this;
+        if(!self.node) return;
 
         if(self.isPatrol()) {
             self.lastPulse++;
@@ -85,6 +95,10 @@ class SpyDrone extends MovingObject {
         }
     }
 
+    /**
+     * Emite un pulso de detección que
+     * se propagara por el environment
+     */
     emmitPulse() {
         let self = this;
 

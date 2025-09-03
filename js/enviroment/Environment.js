@@ -1,17 +1,25 @@
 import { Sphere } from "./Sphere.js";
+import { EnvironmentObject } from "../objects/EnviromentObject.js";
+import {JSObject} from "../core/JSObject";
 
-class Enviroment extends JSObject {
+class Environment extends JSObject {
 
     static create() {
-        let obj = new Enviroment();
+        let obj = new Environment();
         
         return obj;
     }
 
     constructor() {
         super();
-        
-        this.movingObjects = [];
+
+        /**
+         * Objetos del entorno
+         * @type {EnvironmentObject[]}
+         * @private
+         */
+        this._objects = [];
+
         // CL3D.SceneNode (terrain)
         this.terrain = null;
 
@@ -20,13 +28,27 @@ class Enviroment extends JSObject {
         obj.init();
     }
 
+    /**
+     * Obtiene todos los objetos
+     * @returns {EnvironmentObject[]}
+     */
+    get objects() {
+        return this._objects;
+    }
 
     spawnSpyDrone() {}
 
     init() { }
 
-    spawnObject() {
-        self.dispatchEvent("spawnedObject", {} );
+    /**
+     *
+     * @param {EnvironmentObject} obj
+     */
+    spawnObject(obj) {
+        let self = this;
+        obj.env = self;
+        self.objects.push(obj);
+        self.dispatchEvent("spawnedObject", { object: obj } );
     }
 
     destroyObject() { }
@@ -46,15 +68,15 @@ class Enviroment extends JSObject {
     }
 
     /**
-     * Crea un pulso que se propaga en el enviroment
-     * desplazandose en el entorno en forma de onda esferica.
-     * @param {Number} c center
-     * @param {Number} r radius
+     * Crea un pulso que se propaga en el environment
+     * desplazándose en forma de onda esférica.
+     * @param {DetectionPulse} pulse
      */
     spawnPulse(pulse) {
         let self = this;
+        let pos = pulse.emitter
         let s = Sphere.create(c, r);        
-        let objs = self.movingObjects.filter(obj => s.containsPoint(obj.getPosition()));
+        let objs = self.obj.filter(obj => s.containsPoint(obj.getPosition()));
         self.spawnObject(pulse);
         return objs;        
     }

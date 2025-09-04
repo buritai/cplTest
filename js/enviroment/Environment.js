@@ -1,5 +1,7 @@
 import { Sphere } from "./Sphere.js";
 import { EnvironmentObject } from "../objects/EnviromentObject.js";
+import { DetectionPulse } from "../objects/DetectionPulse.js";
+
 import {JSObject} from "../core/JSObject";
 
 class Environment extends JSObject {
@@ -34,6 +36,14 @@ class Environment extends JSObject {
      */
     get objects() {
         return this._objects;
+    }
+
+    /**
+     * Obtiene todos los objetos en movimiento
+     * @returns {EnvironmentObject[]}
+     */
+    get movingObjects() {
+        return this.objects.filter(obj => obj.isMovingObject());
     }
 
     spawnSpyDrone() {}
@@ -74,16 +84,12 @@ class Environment extends JSObject {
      */
     spawnPulse(pulse) {
         let self = this;
-        let pos = pulse.emitter
-        let s = Sphere.create(c, r);        
-        let objs = self.obj.filter(obj => s.containsPoint(obj.getPosition()));
+        
+        let s = pulse.sphere();        
+        //let objs = self.movingObjects.filter(obj => s.containsPoint(obj.getPosition()));
         self.spawnObject(pulse);
         return objs;        
     }
-
-
-    addMovingObject(obj) {
-        this.addMovingObject.add(obj);        
-    }
+    
 
 }

@@ -4,8 +4,6 @@ import { MovingObject } from "./MovingObject";
 
 class DetectionPulse extends EnviromentObject {
 
-
-
     /**
      * Crea una instancia del receptor
      * @param {number} fP force propagation 
@@ -14,8 +12,8 @@ class DetectionPulse extends EnviromentObject {
     static create(fP, emitter = null) {
         let pulse = new DetectionPulse();
         pulse.propagation = fP;
-        pulse.emitter = emmiter;
-        if(emmiter) {
+        pulse.emitter = emitter;
+        if(emitter) {
             pulse.position = emitter.node.position;
         }
 
@@ -33,25 +31,110 @@ class DetectionPulse extends EnviromentObject {
         this._emitter = null;
     }
 
-
+    /**
+     * Getter coeficiente de atenuación
+     * @returns {number}
+     */
     get alpha() {
         return this._alpha;
     }
 
+    /**
+     * Setter coeficiente de atenuación
+     * @param {number} value
+     */
     set alpha(value) {
         this._alpha = value;
     }
 
+    /**
+     * Intensidad inicial, fuerza de propagación
+     * @returns {number}
+     */
     get A0() {
         return this._A0;
     }
 
+    /**
+     * Intensidad inicial, fuerza de propagación
+     * @param {number} value
+     */
     set A0(value) {
         this._A0 = value;
     }
 
+    /**
+     * Velocidad de propgacion
+     * @returns {number}
+     */
+    get speed() {
+        return this._speed;
+    }
+
+    /**
+     * Pasos de propagacion
+     * @param {number} value
+     */
+    set speed(value) {
+        this._speed = value;
+    }
+
+    /**
+     * Pasos de propagacion
+     * @return {number}
+     */
+    get steps() {
+        return this._steps;
+    }
+
+    /**
+     * Pasos de propagacion
+     * @param {number} value
+     */
+    set steps(value) {
+        this._steps = value;
+    }
+
+    /**
+     * Maximo radio de propagacion
+     * @returns {number} 
+     */
+    get maxRadius() {
+        this._maxRadius;
+    }
+
+    /**
+     * Radio actual de propagacion
+     * @returns {number} 
+     */
+    get radius() {
+        this.radius;
+    }
+
+    /**
+     * Radio actual de propagacion
+     * @param {number} value
+     */
+    set radius(value) {
+        this.radius;
+    }
+
+    /**
+     * Esfera actual de propagacion
+     * @returns {Sphere}
+     */
+    sphere() {
+        let self = this;
+        return Sphere.create(self.position, self.radius);
+    }
+
     exec() {
-        
+        let self = this;
+        if(self.radius > self.maxRadius) {
+            self.active = false;
+            return;
+        }
+
     }
 
 

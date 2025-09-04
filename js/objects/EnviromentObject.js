@@ -14,6 +14,8 @@ class EnvironmentObject extends JSObject {
         this._env = null;
 
         this._position = [0,0,0].asVect3d();
+
+        this._active = true;
     }
 
     isEnvObject() {
@@ -23,6 +25,24 @@ class EnvironmentObject extends JSObject {
     isMovingObject() {
         return false;
     }
+
+    /**
+     * Retorna true si el receptor esta activo
+     * @returns {boolean}
+     */
+    get active() {
+        return this._active;
+    }
+
+    /**
+     * Setter de estadfo activo
+     * @param {boolean} value
+     */
+    set active(value) {
+        this._active = value;
+    }
+
+
 
     /**
      * Obtiene el environment
@@ -73,6 +93,9 @@ class EnvironmentObject extends JSObject {
             this._position = value.asVect3d();
         } else this._position = value;
     }
+
+
+    exec() {}
 
 
 }

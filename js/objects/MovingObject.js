@@ -5,7 +5,7 @@ class MovingObject extends JSObject {
 
     constructor() {
         super();
-        this._direction = [0,0,0].asVector3d();
+        this.direction = [0,0,0].asVector3d();
     }
 
     isMovingObject() {

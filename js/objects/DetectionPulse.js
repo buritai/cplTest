@@ -120,7 +120,7 @@ class DetectionPulse extends EnviromentObject {
     }
 
     /**
-     * Esfera actual de propagacion
+     * Esfera actual de propagación
      * @returns {Sphere}
      */
     sphere() {
@@ -128,12 +128,21 @@ class DetectionPulse extends EnviromentObject {
         return Sphere.create(self.position, self.radius);
     }
 
+    /**
+     * Pulso se propaga y afecta el scene node
+     * que wrappea
+     */
     exec() {
         let self = this;
+        // la propagación llego a su máximo, se debe sacar el pulso del environment
         if(self.radius > self.maxRadius) {
             self.active = false;
             return;
         }
+        self.radius += self.speed;
+        self.node.scale.set([self.radius, 0.01, self.radius].asVect3d())
+
+
 
     }
 

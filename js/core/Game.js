@@ -68,7 +68,7 @@ class Game extends JSObject {
         IO.show("mapLoaded ........");        
         MapMngr.addEventListener("#mapLoaded", (event) => {            
             self.initEngine();
-            self.test();
+            self.activateObjects();
         });
         MapMngr.loadMapForId("Intro");
     }
@@ -78,6 +78,13 @@ class Game extends JSObject {
        
 
         //if(!Engine.initRenderer()) throw Error("Imposible arrancar engine");
+
+    }
+
+    /**
+     *
+     */
+    activateObjects() {
 
     }
 

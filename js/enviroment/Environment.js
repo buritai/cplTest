@@ -65,7 +65,7 @@ class Environment extends JSObject {
 
     /**
      * Retorna un conjunto de objetos 
-     * desplazandose en el entorno, 
+     * desplazándose en el entorno,
      * contenidos en el volumen de la esfera.
      * @param {Number} c ecenter
      * @param {Number} r radius

@@ -6,6 +6,10 @@ class JSObject extends EventEmitter {
     constructor() {
         super();
         Emitter.call(this);
-    }    
+    }
+    
+    static classForSymbol(symbol) {
+        return window[symbol];
+    }
 }
 export {JSObject}

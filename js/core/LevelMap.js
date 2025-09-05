@@ -10,15 +10,17 @@ export class LevelMap extends JSObject{
      * @param {CL3D.Scene} scene
      * @returns {LevelMap} lvl
      */
-    static createWith(scene) {
+    static createWith(scene, lvlDescriptor) {
         let lvl = new LevelMap();
         lvl.scene = scene;
+        lvl.descriptor = lvlDescriptor;
         return lvl;
     }
 
     constructor() {
         super();
         this._scene = null;
+        this._descriptor = null;
         this.init();
     }
 
@@ -38,6 +40,24 @@ export class LevelMap extends JSObject{
      */
     set scene(scene) {
         this._scene = scene;
+    }
+
+    /**
+     * Obtiene la escena del receptor.
+     * @access public
+     * @returns {CL3D.Scene}
+     */
+    get descriptor() {
+        return this._descriptor;
+    }
+
+    /**
+     * Setea la escena del receptor.
+     * @access public
+     * @param {CL3D.Scene} scene  {CL3D.Scene}
+     */
+    set descriptor(descriptor) {
+        this._descriptor = descriptor;
     }
 
     init(){}

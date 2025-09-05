@@ -56,8 +56,8 @@ function Emitter() {
  * @access public
  * @returns {CEvent}
  */
-String.prototype.asEvent = function(detail = null) {
-  return CEvent.create(this, detail);
+String.prototype.asEvent = function(data = null) {
+  return CEvent.create(this, data);
 }
 
 /**
@@ -65,8 +65,8 @@ String.prototype.asEvent = function(detail = null) {
  * @access public
  * @returns {CEvent}
  */
-String.prototype.asEventWith = function(detail = null) {
-  return CEvent.create(this, detail);
+String.prototype.asEventWith = function(data = null) {
+  return CEvent.create(this, data);
 }
 
 /**
@@ -89,21 +89,30 @@ String.prototype.asEventDispatchedFor = function(emitter, detail = null) {
  * @param {object} detail
  * @returns {void}
  */
-String.prototype.dispatchEventFor = function(emitter, detail = null) {
+String.prototype.dispatchEventFor = function(emitter, data = null) {
   if(!emitter) throw Error("No se puede despachar un evento si emitter");
-  let event = CEvent.create(this, detail);
+  let event = CEvent.create(this, data);
+  event.emitter = emitter;
   emitter.dispatchEvent(event);
 }
 
 
 class CEvent extends CustomEvent {
-  static create(eventName, detail = null) {
-    if(detail) return new CEvent(eventName, detail);
+  
+  static create(eventName, data = null) {
+    if(data) return new CEvent(eventName, data);
     return new CEvent(eventName);
   } 
 
+  constructor(type, options = null) {
+    super(type, options);
+    this.data = options;
+    this.emitter = null;
+  }
+
   dispatchFor(emitter) {
-    let self = this;    
+    let self = this;
+    self.emitter = emitter;    
     emitter.dispatchEvent(self);
   }
 }

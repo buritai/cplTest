@@ -42,13 +42,13 @@ export class MapManager extends JSObject {
     setupScene(scene, lvlDescriptor) {
         let self = this;        
         CScene = scene;
-        CMap = LevelMap.createWith(CScene);
+        CMap = LevelMap.createWith(CScene, lvlDescriptor);
         // self.setupSceneWith(CSene, lvlDescriptor.sceneProperties);        
         "#sceneLoaded"
-            .asEventWith({scene: CScene})
+            .asEventWith({scene: CScene, levelDescriptor: lvlDescriptor})
             .dispatchFor(self);
         "#mapLoaded"
-            .asEventWith({ map: CMap })
+            .asEventWith({ map: CMap, levelDescriptor: lvlDescriptor })
             .dispatchFor(self);
         //this.dispatchEvent(new CustomEvent("#sceneLoaded", {scene: "CScene"}));
         //this.dispatchEvent(new CustomEvent("#mapLoaded", {scene: "CMap"}));

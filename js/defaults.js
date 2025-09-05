@@ -5,14 +5,22 @@ export let defaults = {
     LEVELS: [
         {
             id: "Intro",
-            file: "scene2.ccbjs",
-            sceneProperties: {
-                ShadowMappingEnabled: true,
-                ShadowMapOpacity: 0.5,
-                ShadowMapResolution: 2048,
-                ShadowMapBias: 0.0001,
-                ShadowMapCameraViewDetailFactor: 0.1
-            }
+            description: "Intro level",
+            file: "scene2.ccbjs",            
+            entities: [
+                {
+                    ccbName: "detectionPulse",
+                    envObject: "DetectionPulse"
+
+                },
+                {
+                    ccbName: "spyDrone",
+                    envObject: "SpyDrone"
+
+                }
+
+            ]
+
         }
     ]
 }

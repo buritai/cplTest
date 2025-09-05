@@ -1,5 +1,5 @@
-import { EnviromentObject } from "EnviromentObject.js";
-import { MovingObject } from "./MovingObject";
+import { EnvironmentObject } from "./EnviromentObject.js";
+import { MovingObject } from "./MovingObject.js";
 
 
 class DetectionPulse extends EnviromentObject {
@@ -140,15 +140,7 @@ class DetectionPulse extends EnviromentObject {
             return;
         }
         self.radius += self.speed;
-        self.node.scale.set([self.radius, 0.01, self.radius].asVect3d())
-
-
-
+        self.node.scale.set([self.radius, 0.01, self.radius].asVect3d());
     }
-
-
-
-
-
-
 }
+export {DetectionPulse}

@@ -1,4 +1,4 @@
-import { JSObject } from "../core/JSObject";
+import { JSObject } from "../core/JSObject.js";
 
 class Sphere extends JSObject {
 

@@ -1,7 +1,7 @@
 
 import { JSObject } from "./JSObject.js";
-import { Sys } from "./Sys.js";
 import { CL3DWalkCircleAnimator } from "../CL3D/CL3DWalkCircleAnimator.js";
+import { Environment } from "../enviroment/Environment.js";
 
 
 
@@ -15,6 +15,7 @@ class Game extends JSObject {
         super();      
         this._menuActive = null;
         this._playing = false;        
+        this._env = null;       
         this.init();        
     }
 
@@ -37,7 +38,10 @@ class Game extends JSObject {
      * @private
      */
     doAnimate() {
-
+        // Environment step
+        if(this.env) {
+            this.env.doStep();
+        }
         // Acciones de NPC
         
         // Proyectiles
@@ -66,9 +70,10 @@ class Game extends JSObject {
         let self = this;
         IO.show("Starting ........");
         IO.show("mapLoaded ........");        
-        MapMngr.addEventListener("#mapLoaded", (event) => {            
+        MapMngr.addEventListener("#mapLoaded", (event) => {         
             self.initEngine();
-            self.activateObjects();
+            self.bindObjects(event.data.map.descriptor);
+            self.test();
         });
         MapMngr.loadMapForId("Intro");
     }
@@ -82,9 +87,15 @@ class Game extends JSObject {
     }
 
     /**
-     *
+     * Enlaza los objetos definidos en el
+     * descriptor de mapa/nivel (scene nodes en CopperCube) 
+     * con alguna instancia de EnvironmentObject.
+     * @param {object} lvlDescriptor
      */
-    activateObjects() {
+    bindObjects(lvlDescriptor) {
+        this.env = Environment.create();
+        this.env.scene = CScene;
+        this.env.terrain = CScene.getSceneNodeFromName("terrain");
 
     }
 

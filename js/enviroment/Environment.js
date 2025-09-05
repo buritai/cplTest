@@ -26,7 +26,7 @@ class Environment extends JSObject {
 
         // CL3D.Scene 
         this._scene = null;
-        obj.init();
+        this.init();
     }
 
     /**
@@ -90,7 +90,7 @@ class Environment extends JSObject {
      * @param {CL3D.Scene} scene
      */
     set scene(scene) {
-        return this._scene = node;
+        return this._scene = scene;
     }
 
 

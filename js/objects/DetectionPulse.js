@@ -2,7 +2,7 @@ import { EnvironmentObject } from "./EnviromentObject.js";
 import { MovingObject } from "./MovingObject.js";
 
 
-class DetectionPulse extends EnviromentObject {
+class DetectionPulse extends EnvironmentObject {
 
     /**
      * Crea una instancia del receptor
@@ -11,11 +11,11 @@ class DetectionPulse extends EnviromentObject {
      */
     static create(fP, emitter = null) {
         let pulse = new DetectionPulse();
-        pulse.propagation = fP;
-        pulse.emitter = emitter;
+        //pulse.propagation = fP;
+        //pulse.emitter = emitter;
         if(emitter) {
             pulse.position = emitter.node.position;
-        }
+        } else pulse.position = []
 
     }
 

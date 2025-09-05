@@ -2,6 +2,7 @@
 import { JSObject } from "./JSObject.js";
 import { CL3DWalkCircleAnimator } from "../CL3D/CL3DWalkCircleAnimator.js";
 import { Environment } from "../enviroment/Environment.js";
+import {DetectionPulse} from "../objects/DetectionPulse.js";
 
 
 
@@ -97,6 +98,7 @@ class Game extends JSObject {
         this.env.scene = CScene;
         this.env.terrain = CScene.getSceneNodeFromName("terrain");
 
+
     }
 
     test() {
@@ -113,6 +115,10 @@ class Game extends JSObject {
             let direction = [0, 1, 0].asVect3d();        
             lightNode.addAnimator(new CL3DWalkCircleAnimator(center, radius, direction, speed));
         }
+        let pulse = DetectionPulse
+        pulse.
+
+        this.env.spawnPulse()
     }
 }
 export { Game }

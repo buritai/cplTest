@@ -52,3 +52,4 @@ class Sphere extends JSObject {
         return d <= sr;
     }
 }
+export {Sphere}

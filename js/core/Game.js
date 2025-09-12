@@ -16,22 +16,38 @@ class Game extends JSObject {
         super();      
         this._menuActive = null;
         this._playing = false;        
-        this._env = null;       
-        this.init();        
+        this._env = null;                  
     }
 
     init() {
         let self = this;
+        console.log('Engine>>', Engine);
         // Hooks varios desde copperlitch
         Engine.onAnimate = function() {
+            console.log('Engine.onAnimate');
             self.doAnimate();
 
         }
 
         Engine.OnBeforeDrawAll = function() {
             self.doBeforeDrawAll();
-        }
-        
+        }        
+    }
+
+    /**
+     * Otiene el entorno
+     * @returns {Environment}
+     */
+    get env() {
+        return this._env;
+    }
+
+    /**
+     * Setea el entorno
+     * @param {Environment} environment
+     */
+    set env(environment) {
+        return this._env = environment;
     }
 
     /**
@@ -39,10 +55,8 @@ class Game extends JSObject {
      * @private
      */
     doAnimate() {
-        // Environment step
-        if(this.env) {
-            this.env.doStep();
-        }
+       
+        console.log('doAnimate');
         // Acciones de NPC
         
         // Proyectiles
@@ -60,7 +74,11 @@ class Game extends JSObject {
      * @private
      */
     doBeforeDrawAll() {
-        
+        console.log('doBeforeDrawAll');
+        // Environment step
+        if(this.env) {
+            this.env.doStep();
+        }
     }
 
     /**
@@ -115,10 +133,15 @@ class Game extends JSObject {
             let direction = [0, 1, 0].asVect3d();        
             lightNode.addAnimator(new CL3DWalkCircleAnimator(center, radius, direction, speed));
         }
-        let pulse = DetectionPulse
-        pulse.
+        let drone = SpyDrone.create();
+        drone.environment = this.env;
+        drone.node = CScene.getSceneNodeFromName("spyDrone");
+        this.env.spawnObject(drone);
 
-        this.env.spawnPulse()
+        let pulse = DetectionPulse.create();
+        pulse.environment = this.env;
+        pulse.node = CScene.getSceneNodeFromName("detectionPulse");
+        this.env.spawnPulse(pulse);
     }
 }
 export { Game }

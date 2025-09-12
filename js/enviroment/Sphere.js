@@ -4,10 +4,10 @@ class Sphere extends JSObject {
 
     /**
      * Crea una instancia del receptor
-     * @param {CL3DAnimator.Vect3d} center 
+     * @param {CL3D.Vect3d} center 
      * @param {number} radius 
      */
-    create(center, radius) {
+    static create(center, radius) {
         let s = new Sphere();
         s.center = center;
         s.radius = radius;

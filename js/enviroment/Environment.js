@@ -1,4 +1,5 @@
 import { Sphere } from "./Sphere.js";
+import { Circle } from "./Circle.js";
 import { EnvironmentObject } from "../objects/EnviromentObject.js";
 import { DetectionPulse } from "../objects/DetectionPulse.js";
 
@@ -106,10 +107,11 @@ class Environment extends JSObject {
      * @private
      */
     doStep() {
+        let self = this;
         // remueve los objetos inactivos
-        this.objects = this.activeObjects;
-        this.objects.forEach((obj) => {
-            obj.exec();
+        self.objects = self.activeObjects;
+        self.objects.forEach((obj) => {
+            obj.exec(self);
         });
     }
 
@@ -121,9 +123,11 @@ class Environment extends JSObject {
      */
     spawnObject(obj) {
         let self = this;
-        obj.env = self;
+        obj.environment = self;
         self.objects.push(obj);
-        self.dispatchEvent("spawnedObject", { object: obj } );
+        "#spawnedObject"
+            .asEventWith({ object: obj })
+            .dispatchFor(self);        
     }
 
     destroyObject() { }
@@ -132,13 +136,28 @@ class Environment extends JSObject {
      * Retorna un conjunto de objetos 
      * desplazándose en el entorno,
      * contenidos en el volumen de la esfera.
-     * @param {Number} c ecenter
+     * @param {CL3D.Vect3d} c center
      * @param {Number} r radius
      */
     objectsForSphere(c, r) {
         let self = this;
         let s = Sphere.create(c, r);
         let objs = self.movingObjects.filter(obj => s.containsPoint(obj.getPosition()));
+        return objs;        
+    }
+
+    /**
+     * Retorna un conjunto de objetos 
+     * desplazándose en el entorno,
+     * contenidos en una circunsferencia
+     * en el plano xz.
+     * @param {Number} c center
+     * @param {Number} r radius
+     */
+    objectsForCircle(c, r) {
+        let self = this;
+        let s = Circle.create(c, r);
+        let objs = self.movingObjects.filter(obj => s.containsPoint(obj.positionXZ));
         return objs;        
     }
 

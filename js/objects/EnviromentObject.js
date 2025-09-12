@@ -1,3 +1,16 @@
+/**
+*  _____           _                                      _   _____ _     _           _   
+* |  ___|         (_)                                    | | |  _  | |   (_)         | |  
+* | |__ _ ____   ___ _ __ ___  _ __  _ __ ___   ___ _ __ | |_| | | | |__  _  ___  ___| |_ 
+* |  __| '_ \ \ / / | '__/ _ \| '_ \| '_ ` _ \ / _ \ '_ \| __| | | | '_ \| |/ _ \/ __| __|
+* | |__| | | \ V /| | | | (_) | | | | | | | | |  __/ | | | |_\ \_/ / |_) | |  __/ (__| |_ 
+* \____/_| |_|\_/ |_|_|  \___/|_| |_|_| |_| |_|\___|_| |_|\__|\___/|_.__/| |\___|\___|\__|
+*                                                                       _/ |              
+* @author buritai
+* Un EnvironmentObject (clase abstracta) es un objeto estatico o dinamico en el entorno 
+* que es sujeto de interacción.
+*/
+
 import { JSObject } from "../core/JSObject.js";
 import { Environment } from "../enviroment/Environment.js";
 
@@ -48,7 +61,7 @@ class EnvironmentObject extends JSObject {
      * Obtiene el environment
      * @returns {Environment}
      */
-    get env() {
+    get environment() {
         return this._env;
     }
 
@@ -56,7 +69,7 @@ class EnvironmentObject extends JSObject {
      * Setea el environment
      * @param {Environment} value
      */
-    set env(value) {
+    set environment(value) {
         this._env = value;
     }
 
@@ -94,9 +107,31 @@ class EnvironmentObject extends JSObject {
         } else this._position = value;
     }
 
+    /**
+     * Posicion en el plano XZ
+     * @returns {CL3D.asVect2d}
+     */
+    get positionXZ() {
+        return [this.position.X, this.position.Z].asVect2d();
+    }
 
-    exec() {}
+     /**
+     * Posicion en el plano XY
+     * @returns {CL3D.asVect2d}
+     */
+    get positionXY() {
+        return [this.position.X, this.position.Y].asVect2d();
+    }
 
 
+    /**
+     * Metodo anstracto.
+     * Cada objeto del entorno debe implementar
+     * su metodo exec.
+     * @param {Environment} env 
+     */
+    exec(env) {
+        throw Error('Debe ser implementado por las sublases')
+    }
 }
 export {EnvironmentObject}

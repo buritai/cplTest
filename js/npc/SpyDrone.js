@@ -27,7 +27,7 @@ class SpyDrone extends MovingObject {
         // detectados en el ultimo pulso de detecccion
         this.targets = [];
 
-        this.lastPulse = 0; // ultimo tick de pulso
+        this.lastPulse = null; // ultimo pulso emitido
     }
 
     /**
@@ -88,8 +88,7 @@ class SpyDrone extends MovingObject {
         if(!self.node) return;
 
         if(self.isPatrol()) {
-            self.lastPulse++;
-            if(self.lastPulse > self.defaultTickPulse()) {
+            if(!self.lastPulse) {
                 self.emmitPulse();
             }
         }
@@ -100,11 +99,19 @@ class SpyDrone extends MovingObject {
      * se propagara por el environment
      */
     emmitPulse() {
-        let self = this;
+        let self = this;        
+        let pulse = DetectionPulse.create(self);
+        self.lastPulse = pulse;      
+        self.env.spawnPulse(pulse);        
+    }
 
-        //self.targets = self.env.objectsForSphere(this.node.getPosition(), self.defaultRadiusPulse());
-        let pulse = DetectionPulse.create(self.forcePropagation, self);        
-        this.env.spawnPulse(pulse);
+    /**
+     * La propagacion del ultimo pulso emitido
+     * ha colapsado
+     * @param {DetectionPulse}} pulse 
+     */
+    puseColapsed(pulse) {
+        this.lastPulse = null;
     }
 
 

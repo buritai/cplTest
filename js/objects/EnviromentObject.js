@@ -27,6 +27,7 @@ class EnvironmentObject extends JSObject {
         this._env = null;
 
         this._position = [0,0,0].asVect3d();
+        this._scale = [1,1,1].asVect3d();
 
         this._active = true;
     }
@@ -94,17 +95,23 @@ class EnvironmentObject extends JSObject {
      * @returns {CL3D.Vector3d}
      */
     get position() {
+        this._position = this.node.Pos;
         return this._position;
     }
 
     /**
-     * Setea la posición del receptor
+     * Setea la posición del receptor. 
+     * Por omision sincroniza con el SceneNode
      * @param {array | CL3D.Vector3d}
      */
     set position( value ) {
         if(Array.isArray(value)) {
             this._position = value.asVect3d();
         } else this._position = value;
+        this.node.Pos.X = this._position.X;
+        this.node.Pos.Y = this._position.Y;
+        this.node.Pos.Z = this._position.Z;
+        //this.node.updateAbsolutePosition();   
     }
 
     /**

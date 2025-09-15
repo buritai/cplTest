@@ -104,14 +104,16 @@ class Environment extends JSObject {
      * Realiza un paso en la simulacion del
      * entorno. Remueve los objetos inactivos
      * y acciona cada objeto vivo.
+     * @param {number} deltatime
      * @private
      */
-    doStep() {
+    doStep(deltatime) {
         let self = this;
+
         // remueve los objetos inactivos
         self.objects = self.activeObjects;
         self.objects.forEach((obj) => {
-            obj.exec(self);
+            obj.exec(deltatime);
         });
     }
 

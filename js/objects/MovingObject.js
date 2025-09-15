@@ -1,11 +1,11 @@
-import { JSObject } from "../core/JSObject.js";
+import { EnvironmentObject } from "./EnviromentObject.js";
 
 
-class MovingObject extends JSObject {
+class MovingObject extends EnvironmentObject {
 
     constructor() {
         super();
-        this.direction = [0,0,0].asVector3d();
+        this._direction = [0,0,0].asVect3d();
     }
 
     isMovingObject() {

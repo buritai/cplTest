@@ -2,7 +2,8 @@
 import { JSObject } from "./JSObject.js";
 import { CL3DWalkCircleAnimator } from "../CL3D/CL3DWalkCircleAnimator.js";
 import { Environment } from "../enviroment/Environment.js";
-import {DetectionPulse} from "../objects/DetectionPulse.js";
+import { DetectionPulse } from "../objects/DetectionPulse.js";
+import { SpyDrone  } from "../npc/SpyDrone.js";
 
 
 
@@ -16,7 +17,8 @@ class Game extends JSObject {
         super();      
         this._menuActive = null;
         this._playing = false;        
-        this._env = null;                  
+        this._env = null;
+        this._previousTime = performance.now();                
     }
 
     init() {
@@ -30,7 +32,10 @@ class Game extends JSObject {
         }
 
         Engine.OnBeforeDrawAll = function() {
-            self.doBeforeDrawAll();
+            const currentTime = performance.now();
+            let deltaTime = (currentTime - self._previousTime) / 1000; // segundos
+            self._previousTime = currentTime;
+            self.doBeforeDrawAll(deltaTime);
         }        
     }
 
@@ -72,12 +77,13 @@ class Game extends JSObject {
      * Activacion del receptor en cada frame 
      * antes de renderizar la escena
      * @private
+     * @param {number} deltaTime
      */
-    doBeforeDrawAll() {
+    doBeforeDrawAll(deltatime) {
         console.log('doBeforeDrawAll');
         // Environment step
         if(this.env) {
-            this.env.doStep();
+            this.env.doStep(deltatime);
         }
     }
 
@@ -122,6 +128,7 @@ class Game extends JSObject {
     test() {
         let lightNode = CScene.getSceneNodeFromName("Light1");
         let sound = CScene.getSceneNodeFromName("3DSound1");
+        let soldier = CScene.getSceneNodeFromName("soldier");
         console.log(CL3D.gSoundManager);
         if(lightNode) {
             let radius = 100;
@@ -136,12 +143,16 @@ class Game extends JSObject {
         let drone = SpyDrone.create();
         drone.environment = this.env;
         drone.node = CScene.getSceneNodeFromName("spyDrone");
+        let soldierPos = soldier.getAbsolutePosition();        
+        drone.currentChekpoint = soldierPos;
+
         this.env.spawnObject(drone);
 
-        let pulse = DetectionPulse.create();
-        pulse.environment = this.env;
-        pulse.node = CScene.getSceneNodeFromName("detectionPulse");
-        this.env.spawnPulse(pulse);
+
+        // let pulse = DetectionPulse.create();
+        // pulse.environment = this.env;
+        // pulse.node = CScene.getSceneNodeFromName("detectionPulse");
+        // this.env.spawnPulse(pulse);
     }
 }
 export { Game }

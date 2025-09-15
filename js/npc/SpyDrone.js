@@ -1,6 +1,6 @@
 import { MovingObject } from "../objects/MovingObject.js";
 import { DetectionPulse } from "../objects/DetectionPulse.js";
-import { Environment } from "../objects/Environment.js";
+
 
 const OperationalMode = {
     PATROL: 'PATROL',
@@ -9,32 +9,47 @@ const OperationalMode = {
 
 class SpyDrone extends MovingObject {
 
-
     static create() {
         let obj = new SpyDrone();
         obj.init();
         return obj;
     }
 
-
-
     constructor() {
         super();
 
-        this._mode = OperationalMode.ATTACK
+        this._mode = OperationalMode.PATROL
 
         // Conjunto de potenciales objetivos
         // detectados en el ultimo pulso de detecccion
-        this.targets = [];
+        this._targets = [];
 
-        this.lastPulse = null; // ultimo pulso emitido
+        /**
+         * El spydrone funciona con checkpoints y targets.
+         * El funcionamiento basico es alcanzar el currentCK (current checkpoint)
+         * un vez alcanzado toma de su lista circular de checkpoints el siguiente 
+         * y lo pone como currentCk. Y asi sucesivamente.
+         */
+        this._checkPoints = []; // checkpoints para alcanzar
+        this._currentCK = null;  // checkpoint actual
+
+        this._lastPulse = null; // ultimo pulso emitido
+        this._minAltitude = 1; // altitud minima de desplazamento
     }
+
+    
+    get minAltitude() {
+        return this._minAltitude;
+    }
+
+
 
     /**
      * @private
      */
     init() {
-
+       
+        
     }
 
     /**
@@ -43,7 +58,7 @@ class SpyDrone extends MovingObject {
      * @returns {Boolean}
      */
     isPatrol() {
-        return self.mode == OperationalMode.PATROL;
+        return this._mode == OperationalMode.PATROL;
     }
 
     /**
@@ -78,18 +93,102 @@ class SpyDrone extends MovingObject {
         return this.defaultForcePropagation();
     }
 
+
+    set currentChekpoint(value) {
+        this._currentCK = value;
+    }
+
+    get currentChekpoint() {
+        return this._currentCK;
+    }
+
+    /**
+     * Testea si tiene checkpoint actual
+     * @private
+     * @returns {boolean}
+     */
+    hasCheckpoint() {
+        return (this._currentCK != null);
+    }
+
+    /**
+     * Se mueve al checkpoint actual
+     * @param {number} deltatime
+     * @private
+     */
+    moveToCurrentCkPoint(deltatime) {
+        let self = this;
+        self.moveToCkPoint(this._currentCK, deltatime);
+    }
+
+    /**
+     * Se mueve al checkpoint actual
+     * @private
+     * @param {CL3D.Vect3d} ckpoint
+     * @param {number} deltatime
+     */
+    moveToCkPoint(ckpoint, deltatime) {
+        let self = this;
+        //deltatime = deltatime * 10;     
+        let position = this.position;        
+        if(ckpoint == null) return;
+
+        const initialSpeedKmh = 200;
+        let mps = (initialSpeedKmh * 1000) / 3600; // metros por segundo
+
+       
+
+        // Vector dirección (normalizada) hacia el destino limitado en altitud        
+        const dir = position.normalizedPointingTo(ckpoint);
+
+        // Distancia al destino
+        const dist = position.getDistanceTo(ckpoint);
+        if (dist < 0.01) return position;  // llegó o muy cerca
+
+        // Velocidad variable según altura actual
+        // Por ejemplo: velocidad = velocidadInicial * (1 - altura/maxAltura)
+        // Esto hace que a 0 m sea 3 km/h y a 1 m sea 0 km/h (lento)
+        const speedMps = mps; // *(1 - (position.Z / maxAltitude));
+
+        // Distancia a mover en intervalo deltaTime
+        const moveDist = speedMps * deltatime;
+
+        // Nueva posición: mover en dirección normalizada la distancia calculada,
+        // pero sin pasar el destino
+        if (moveDist > dist) {
+            return ckpoint;
+        } else {
+            let newPoint = [
+                position.X + dir.X * moveDist,
+                position.Y + dir.Y * moveDist,
+                position.Z + dir.Z * moveDist    
+            ].asVect3d();
+            this.position = newPoint;
+            console.log("checkpoint>> ", ckpoint.X,ckpoint.Y,ckpoint.Z);        
+            console.log("newPoint>> ", newPoint.X,newPoint.Y,newPoint.Z);
+            console.log("speed", moveDist);
+            console.log('dist :>> ', dist);
+            return newPoint;
+        }
+
+    }
+
+
     /**
      * Ejecuta turno del receptor. 
      * Comportamiento de acuerdo al modo operacional
+     * @param {number} deltatime
      * @private
      */
-    exec() {
+    exec(deltatime) {
+        let dt = deltatime;        
         let self = this;
         if(!self.node) return;
-
-        if(self.isPatrol()) {
+        
+        if(self.isPatrol() && self.hasCheckpoint()) {     
+            self.moveToCurrentCkPoint(dt);
             if(!self.lastPulse) {
-                self.emmitPulse();
+                //self.emmitPulse();
             }
         }
     }
@@ -113,6 +212,5 @@ class SpyDrone extends MovingObject {
     puseColapsed(pulse) {
         this.lastPulse = null;
     }
-
-
 }
+export {SpyDrone}

@@ -1,4 +1,5 @@
 * [Armor](https://gbmshop.blogspot.com/2012/03/mc-queadluunrau.html)
+* [Armor toy](https://m.ruliweb.com/family/232/board/300016/read/2323969)
 * [Macross tecnical Manual](https://macross2.net/m3/macrosstechman/tech-zentradiheight.html)
 https://robotech.fandom.com/wiki/Robotech_Saga_Wiki
 * [Robotech reference Guide](https://robotechreferenceguide.fandom.com/wiki/Robotech_Reference_Guide)
@@ -13,3 +14,4 @@ https://robotech.fandom.com/wiki/Robotech_Saga_Wiki
 * [COMO OPTIMIZAR MODELOS 3D](https://youtu.be/fx_a7LKSJjY?si=2Mg6uc2lVU8s-0mC)
 * [CopperCube - 3D mesh Terrains](https://youtu.be/Vo91oNvrU_0?si=ZPTQa-4ZAKtIBb8X)
 * [Comantarios de optimizacion de glb](https://www.reddit.com/r/threejs/comments/1nbqa3k/gltf_models/?%24deep_link=true&post_index=0)
+* [Dev game](https://devga.me/tutorials/coppercube-6/extending-coppercube-with-javascript/)

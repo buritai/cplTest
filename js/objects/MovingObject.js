@@ -28,6 +28,15 @@ class MovingObject extends EnvironmentObject {
         if(Array.isArray(value)) {
             this._direction = value.asVect3d();
         } else this._direction = value;
+        this.debugDirection();
+    }
+
+    /**
+     * Debug direccion como una linea visible en el environment
+     * @private
+     */
+    debugDirection() {
+        // Debes ser redefinida en sublcases
     }
 
 }

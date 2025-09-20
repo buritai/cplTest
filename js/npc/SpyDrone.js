@@ -1,5 +1,6 @@
 import { MovingObject } from "../objects/MovingObject.js";
 import { DetectionPulse } from "../objects/DetectionPulse.js";
+import { Queue } from "../core/Queue.js";
 
 
 const OperationalMode = {
@@ -10,7 +11,7 @@ const OperationalMode = {
 class SpyDrone extends MovingObject {
 
     static create() {
-        let obj = new SpyDrone();
+        let obj = new SpyDrone();        
         obj.init();
         return obj;
     }
@@ -30,8 +31,8 @@ class SpyDrone extends MovingObject {
          * un vez alcanzado toma de su lista circular de checkpoints el siguiente 
          * y lo pone como currentCk. Y asi sucesivamente.
          */
-        this._checkPoints = []; // checkpoints para alcanzar
-        this._currentCK = null;  // checkpoint actual
+        this._checkPoints = Queue.create(); // checkpoints para alcanzar
+        this._currentCKPoint = null;  // checkpoint actual
 
         this._lastPulse = null; // ultimo pulso emitido
         this._minAltitude = 1; // altitud minima de desplazamento
@@ -42,15 +43,32 @@ class SpyDrone extends MovingObject {
         return this._minAltitude;
     }
 
+    /**
+     * Debug
+     */
+    get directionNode() {
+        if(this._directionNode.Rot.isOrigin()) {
+            if(this.direction) {
+                this.directionNode.Rot = this.direction.asDegreeRotation(); 
+            } 
+        }
+        return this._directionNode;
 
+    }
 
+    /**
+     * Debug
+     */
+    set directionNode(sceneNode) {
+        this._directionNode = sceneNode;
+    }
+    
     /**
      * @private
      */
-    init() {
-       
-        
-    }
+    init() { }
+
+    
 
     /**
      * Retorna true si el estado operacional es patrulla
@@ -61,21 +79,8 @@ class SpyDrone extends MovingObject {
         return this._mode == OperationalMode.PATROL;
     }
 
-    /**
-     * Tiempo de vida del pulso sobre el enviroment
-     * @returns {number}
-     */
-    defaultLifespanPulse() {
-        return 10;
-    }
-
-    /**
-     * Radio del pulso
-     * @returns {number}
-     */
-    defaultRadiusPulse() {
-        return 10;
-    }
+    
+    
 
     /**
      * Propagación default del pulso
@@ -95,11 +100,63 @@ class SpyDrone extends MovingObject {
 
 
     set currentChekpoint(value) {
-        this._currentCK = value;
+        this._currentCKPoint = value;
     }
 
     get currentChekpoint() {
-        return this._currentCK;
+        return this._currentCKPoint;
+    }
+
+    get checkpoints() {
+        return this._checkPoints;
+    }
+
+    updateDebugTools() { }
+
+    debugDirection() {
+        let self = this;
+        // Vector dirección (por ejemplo, desde el origen hacia x=1, y=1, z=1)
+        let origin = [0,0,0].asVect3d();
+        let dir = self.direction.multiplyWithScal(20);
+
+        var stick = self.createDebugDirectionStick(
+            origin,
+            dir,
+            0.05, // grosor del vector
+           null
+        );
+        // Añadir nodo a la escena
+        CScene.getRootSceneNode().addChild(stick);
+        self.node.addChild(stick);
+    }
+
+
+    createDebugDirectionStick(startPoint, directionVector, thickness = 0.1, color = null) {
+        let self = this;
+        //let scene = Engine.getScene();
+
+        // 1. Crear cubo (primitiva de CopperLicht)
+        let stick = new CL3D.CubeSceneNode(1.0,1.0,1.0); // tamaño base 1x1x1
+    
+        // 2. Calcular rotación para alinear el eje Y del cubo con la dirección
+        // En CopperLicht, el cubo por defecto tiene Y como "arriba", así que lo rotamos para que Y siga la dirección
+        var up = [0, 1, 0].asVect3d(); // vector "arriba" de referencia
+        var rotation = directionVector.asDegreeRotation(up);
+        stick.Rot = rotation;
+
+        // 3. Escalar el cubo:
+        // - En Y: para que su longitud = magnitud del vector
+        // - En X y Z: para que tenga un grosor fino (como una línea 3D)
+        var length = directionVector.getLength();
+        stick.Scale = new CL3D.Vect3d(thickness, length, thickness);
+
+        // 4. Posicionar el cubo en el punto MEDIO entre inicio y fin
+        // (porque el cubo está centrado en su origen)
+        var midpoint = startPoint.add(directionVector.multiplyWithScal(0.5));
+        stick.Pos = midpoint;
+        stick.getMaterial(0).Tex1 = Engine.getTextureManager().getTexture("copperlichtdata/default_skybox0.jpg", true);
+
+        return stick;
     }
 
     /**
@@ -107,8 +164,20 @@ class SpyDrone extends MovingObject {
      * @private
      * @returns {boolean}
      */
-    hasCheckpoint() {
-        return (this._currentCK != null);
+    hasCurrentCheckpoint() {
+        return (this._currentCKPoint != null);
+    }
+
+    addCheckpoint(chkpoint) {
+        let self = this;
+        self._checkPoints.push(chkpoint);
+    }
+
+    nextCheckpoint() {
+        let chkp = this._checkPoints.pop();        
+        this._checkPoints.push(chkp);
+        console.log("nextCheckpoint", chkp);
+        return chkp;
     }
 
     /**
@@ -118,32 +187,37 @@ class SpyDrone extends MovingObject {
      */
     moveToCurrentCkPoint(deltatime) {
         let self = this;
-        self.moveToCkPoint(this._currentCK, deltatime);
-    }
+        let position = self.position;
+        if(!self.hasCurrentCheckpoint() && self.checkpoints.notEmpty()) {
+            self.currentChekpoint = self.nextCheckpoint();
+            let dir = position.normalizedPointingTo(self.currentChekpoint);
+            self.direction = dir;            
+        }
+        self.move(deltatime);
+        
+    }   
 
     /**
-     * Se mueve al checkpoint actual
+     * Se mueve de acuerdo a la direccion actual
      * @private
-     * @param {CL3D.Vect3d} ckpoint
      * @param {number} deltatime
      */
-    moveToCkPoint(ckpoint, deltatime) {
+    move(deltatime) {
         let self = this;
-        //deltatime = deltatime * 10;     
-        let position = this.position;        
-        if(ckpoint == null) return;
-
-        const initialSpeedKmh = 200;
+        //deltatime = deltatime * 10;
+        let position = self.position;     
+        
+        const initialSpeedKmh = 150;
         let mps = (initialSpeedKmh * 1000) / 3600; // metros por segundo
-
-       
-
-        // Vector dirección (normalizada) hacia el destino limitado en altitud        
-        const dir = position.normalizedPointingTo(ckpoint);
-
+        
         // Distancia al destino
-        const dist = position.getDistanceTo(ckpoint);
-        if (dist < 0.01) return position;  // llegó o muy cerca
+        const dist = position.getDistanceTo(this.currentChekpoint);
+        console.log('dist :>> ', dist);
+        if (dist < 100) {
+            console.log('jaaaaaaaaa', dist);
+            self.currentChekpoint = null;
+            return position;  // llegó o muy cerca
+        } 
 
         // Velocidad variable según altura actual
         // Por ejemplo: velocidad = velocidadInicial * (1 - altura/maxAltura)
@@ -153,21 +227,19 @@ class SpyDrone extends MovingObject {
         // Distancia a mover en intervalo deltaTime
         const moveDist = speedMps * deltatime;
 
+        
+
         // Nueva posición: mover en dirección normalizada la distancia calculada,
         // pero sin pasar el destino
         if (moveDist > dist) {
-            return ckpoint;
+            return this._currentCKPoint;
         } else {
             let newPoint = [
-                position.X + dir.X * moveDist,
-                position.Y + dir.Y * moveDist,
-                position.Z + dir.Z * moveDist    
+                position.X + this.direction.X * moveDist,
+                position.Y + this.direction.Y * moveDist,
+                position.Z + this.direction.Z * moveDist    
             ].asVect3d();
-            this.position = newPoint;
-            console.log("checkpoint>> ", ckpoint.X,ckpoint.Y,ckpoint.Z);        
-            console.log("newPoint>> ", newPoint.X,newPoint.Y,newPoint.Z);
-            console.log("speed", moveDist);
-            console.log('dist :>> ', dist);
+            this.position = newPoint;            
             return newPoint;
         }
 
@@ -185,12 +257,14 @@ class SpyDrone extends MovingObject {
         let self = this;
         if(!self.node) return;
         
-        if(self.isPatrol() && self.hasCheckpoint()) {     
+        if(self.isPatrol()) {     
             self.moveToCurrentCkPoint(dt);
+
             if(!self.lastPulse) {
                 //self.emmitPulse();
             }
         }
+        self.updateDebugTools();        
     }
 
     /**

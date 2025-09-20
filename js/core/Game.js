@@ -129,6 +129,8 @@ class Game extends JSObject {
         let lightNode = CScene.getSceneNodeFromName("Light1");
         let sound = CScene.getSceneNodeFromName("3DSound1");
         let soldier = CScene.getSceneNodeFromName("soldier");
+        let decoy = CScene.getSceneNodeFromName("decoy");
+        let spyDrone = CScene.getSceneNodeFromName("spyDrone");
         console.log(CL3D.gSoundManager);
         if(lightNode) {
             let radius = 100;
@@ -140,11 +142,21 @@ class Game extends JSObject {
             let direction = [0, 1, 0].asVect3d();        
             lightNode.addAnimator(new CL3DWalkCircleAnimator(center, radius, direction, speed));
         }
+
         let drone = SpyDrone.create();
         drone.environment = this.env;
-        drone.node = CScene.getSceneNodeFromName("spyDrone");
-        let soldierPos = soldier.getAbsolutePosition();        
-        drone.currentChekpoint = soldierPos;
+        drone.node = spyDrone;        
+        drone.addCheckpoint(soldier.getAbsolutePosition());
+        drone.addCheckpoint(decoy.getAbsolutePosition());
+        drone.addCheckpoint(spyDrone.getAbsolutePosition());
+
+        
+        // debug stick
+        // let stick = new CL3D.CubeSceneNode(0.1,20,0.1);
+        // CScene.getRootSceneNode().addChild(stick);
+        // drone.node.addChild(stick);
+        //drone.directionNode = stick;
+        //stick.getMaterial(0).Tex1 = Engine.getTextureManager().getTexture("copperlichtdata/default_skybox0.jpg", true);
 
         this.env.spawnObject(drone);
 

@@ -15,8 +15,6 @@ import { JSObject } from "../core/JSObject.js";
 import { Environment } from "../enviroment/Environment.js";
 
 class EnvironmentObject extends JSObject {
-
-
     constructor() {
         super();
 

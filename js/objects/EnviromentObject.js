@@ -28,6 +28,11 @@ class EnvironmentObject extends JSObject {
         this._scale = [1,1,1].asVect3d();
 
         this._active = true;
+        this._debugTools = {
+                    dir: null,
+                    hull: null,
+                    bbox: null
+                };
     }
 
     isEnvObject() {
@@ -54,7 +59,10 @@ class EnvironmentObject extends JSObject {
         this._active = value;
     }
 
-
+    
+    get debugTools() {
+        return this._debugTools;
+    }
 
     /**
      * Obtiene el environment

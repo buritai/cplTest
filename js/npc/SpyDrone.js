@@ -113,25 +113,38 @@ class SpyDrone extends MovingObject {
 
     updateDebugTools() { }
 
+
     debugDirection() {
         let self = this;
         // Vector dirección (por ejemplo, desde el origen hacia x=1, y=1, z=1)
         let origin = [0,0,0].asVect3d();
         let dir = self.direction.multiplyWithScal(20);
-
-        var stick = self.createDebugDirectionStick(
-            origin,
-            dir,
-            0.05, // grosor del vector
-           null
-        );
-        // Añadir nodo a la escena
-        CScene.getRootSceneNode().addChild(stick);
-        self.node.addChild(stick);
+        if(!self.debugTools.dir) {
+            let stick = self.createDebugDirection(
+                origin,
+                dir,
+                0.1, // grosor del vector
+            null
+            );
+            // Añadir nodo a la escena
+            CScene.getRootSceneNode().addChild(stick);
+            self.node.addChild(stick);
+            self.debugTools.dir = stick;
+        } else self.updateDebugDirection(dir);
     }
 
+    updateDebugDirection(directionVector) {
+        let self = this;
+        let stick = self.debugTools.dir;
+        if (!stick) return;
 
-    createDebugDirectionStick(startPoint, directionVector, thickness = 0.1, color = null) {
+        // Recalcular rotación
+        let up = [0, 1, 0].asVect3d(); // vector "arriba" de referencia
+        let rotation = directionVector.asDegreeRotation(up);
+        stick.Rot = rotation;       
+    }
+
+    createDebugDirection(startPoint, directionVector, thickness = 0.1, color = null) {
         let self = this;
         //let scene = Engine.getScene();
 
@@ -140,8 +153,8 @@ class SpyDrone extends MovingObject {
     
         // 2. Calcular rotación para alinear el eje Y del cubo con la dirección
         // En CopperLicht, el cubo por defecto tiene Y como "arriba", así que lo rotamos para que Y siga la dirección
-        var up = [0, 1, 0].asVect3d(); // vector "arriba" de referencia
-        var rotation = directionVector.asDegreeRotation(up);
+        let up = [0, 1, 0].asVect3d(); // vector "arriba" de referencia
+        let rotation = directionVector.asDegreeRotation(up);
         stick.Rot = rotation;
 
         // 3. Escalar el cubo:
@@ -165,17 +178,25 @@ class SpyDrone extends MovingObject {
      * @returns {boolean}
      */
     hasCurrentCheckpoint() {
-        return (this._currentCKPoint != null);
+        let self = this;
+        return (self.currentChekpoint != null);
     }
 
     addCheckpoint(chkpoint) {
         let self = this;
-        self._checkPoints.push(chkpoint);
+        self.checkpoints.push(chkpoint);
     }
 
+
+    /**
+     * Retorna el siguiente checkpoint de la cola 
+     * circular de checkpoints
+     * @returns {CL3D.Vect3d}
+     */
     nextCheckpoint() {
-        let chkp = this._checkPoints.pop();        
-        this._checkPoints.push(chkp);
+        let self = this;
+        let chkp = self.checkpoints.pop();        
+        this.checkpoints.push(chkp);
         console.log("nextCheckpoint", chkp);
         return chkp;
     }
@@ -207,14 +228,12 @@ class SpyDrone extends MovingObject {
         //deltatime = deltatime * 10;
         let position = self.position;     
         
-        const initialSpeedKmh = 150;
+        const initialSpeedKmh = 550;
         let mps = (initialSpeedKmh * 1000) / 3600; // metros por segundo
         
         // Distancia al destino
-        const dist = position.getDistanceTo(this.currentChekpoint);
-        console.log('dist :>> ', dist);
-        if (dist < 100) {
-            console.log('jaaaaaaaaa', dist);
+        const dist = position.getDistanceTo(this.currentChekpoint);        
+        if (dist < 100) {           
             self.currentChekpoint = null;
             return position;  // llegó o muy cerca
         } 

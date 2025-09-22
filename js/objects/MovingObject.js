@@ -28,7 +28,8 @@ class MovingObject extends EnvironmentObject {
         if(Array.isArray(value)) {
             this._direction = value.asVect3d();
         } else this._direction = value;
-        this.debugDirection();
+        
+        if(this._debugTools) this.debugDirection();
     }
 
     /**

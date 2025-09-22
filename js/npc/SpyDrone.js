@@ -114,63 +114,19 @@ class SpyDrone extends MovingObject {
     updateDebugTools() { }
 
 
+    /**
+     * DEBUG
+     */
     debugDirection() {
-        let self = this;
-        // Vector dirección (por ejemplo, desde el origen hacia x=1, y=1, z=1)
-        let origin = [0,0,0].asVect3d();
-        let dir = self.direction.multiplyWithScal(20);
-        if(!self.debugTools.dir) {
-            let stick = self.createDebugDirection(
-                origin,
-                dir,
-                0.1, // grosor del vector
-            null
-            );
-            // Añadir nodo a la escena
-            CScene.getRootSceneNode().addChild(stick);
-            self.node.addChild(stick);
-            self.debugTools.dir = stick;
-        } else self.updateDebugDirection(dir);
+        this.debugTools.debugDirection();
     }
 
-    updateDebugDirection(directionVector) {
-        let self = this;
-        let stick = self.debugTools.dir;
-        if (!stick) return;
-
-        // Recalcular rotación
-        let up = [0, 1, 0].asVect3d(); // vector "arriba" de referencia
-        let rotation = directionVector.asDegreeRotation(up);
-        stick.Rot = rotation;       
-    }
-
-    createDebugDirection(startPoint, directionVector, thickness = 0.1, color = null) {
-        let self = this;
-        //let scene = Engine.getScene();
-
-        // 1. Crear cubo (primitiva de CopperLicht)
-        let stick = new CL3D.CubeSceneNode(1.0,1.0,1.0); // tamaño base 1x1x1
-    
-        // 2. Calcular rotación para alinear el eje Y del cubo con la dirección
-        // En CopperLicht, el cubo por defecto tiene Y como "arriba", así que lo rotamos para que Y siga la dirección
-        let up = [0, 1, 0].asVect3d(); // vector "arriba" de referencia
-        let rotation = directionVector.asDegreeRotation(up);
-        stick.Rot = rotation;
-
-        // 3. Escalar el cubo:
-        // - En Y: para que su longitud = magnitud del vector
-        // - En X y Z: para que tenga un grosor fino (como una línea 3D)
-        var length = directionVector.getLength();
-        stick.Scale = new CL3D.Vect3d(thickness, length, thickness);
-
-        // 4. Posicionar el cubo en el punto MEDIO entre inicio y fin
-        // (porque el cubo está centrado en su origen)
-        var midpoint = startPoint.add(directionVector.multiplyWithScal(0.5));
-        stick.Pos = midpoint;
-        stick.getMaterial(0).Tex1 = Engine.getTextureManager().getTexture("copperlichtdata/default_skybox0.jpg", true);
-
-        return stick;
-    }
+    /**
+     * DEBUG
+     */
+    updateDebugDirection() {
+        this.debugTools.updateDebugDirection();
+    }   
 
     /**
      * Testea si tiene checkpoint actual
@@ -228,7 +184,7 @@ class SpyDrone extends MovingObject {
         //deltatime = deltatime * 10;
         let position = self.position;     
         
-        const initialSpeedKmh = 550;
+        const initialSpeedKmh = 950;
         let mps = (initialSpeedKmh * 1000) / 3600; // metros por segundo
         
         // Distancia al destino
@@ -257,8 +213,16 @@ class SpyDrone extends MovingObject {
                 position.X + this.direction.X * moveDist,
                 position.Y + this.direction.Y * moveDist,
                 position.Z + this.direction.Z * moveDist    
-            ].asVect3d();
-            this.position = newPoint;            
+            ].asVect3d();            
+            this.position = newPoint;
+
+            // Actualiza direccion de acuerdo a la nueva posicion
+            let dir = newPoint.normalizedPointingTo(self.currentChekpoint);            
+            self.direction = dir;  
+
+            // Debug tools
+            if(self.debugTools) self.updateDebugDirection();
+
             return newPoint;
         }
 

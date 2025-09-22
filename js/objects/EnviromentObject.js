@@ -13,6 +13,7 @@
 
 import { JSObject } from "../core/JSObject.js";
 import { Environment } from "../enviroment/Environment.js";
+import { DebugTools } from "../core/DebugTools.js";
 
 class EnvironmentObject extends JSObject {
     constructor() {
@@ -28,17 +29,32 @@ class EnvironmentObject extends JSObject {
         this._scale = [1,1,1].asVect3d();
 
         this._active = true;
-        this._debugTools = {
-                    dir: null,
-                    hull: null,
-                    bbox: null
-                };
+        this._debugTools = this.debugToolsObject();                   
     }
 
+    /**
+     * Propositos de debug. Retorna un objeto
+     * con las tools de debug.
+     * @private
+     * @returns {object}
+     */
+    debugToolsObject() {                
+        return DebugTools.create(this);
+    }
+    
+    /**
+     * Retorna true si es un objeto del environment
+     * @returns {boolean}
+     */
     isEnvObject() {
         return true;
     }
 
+    /**
+     * Retorna true si es un objeto con capacidad de traslacion
+     * en el environment.
+     * @returns {boolean}
+     */
     isMovingObject() {
         return false;
     }
